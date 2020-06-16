@@ -118,15 +118,23 @@ class Widget_Matplotlib(QWidget) :
         #self.__load_object.setText('Object : '+self.__lien)
 
     def push_compute(self):
+        if self.partie_droite.eau_de_mer.isChecked() == True :
+            print('yes')
+            self.partie_droite.rho=1025
+        else :
+            self.partie_droite.rho=1000
         print((self.potentiometre.line1.text()),(self.potentiometre.line1.text()),(self.partie_droite.precision),
-                     (self.fichier.vectors),(self.fichier.normals),(self.partie_droite.rho),(self.partie_droite.masse))
+                     (self.partie_droite.rho),(self.partie_droite.masse))
 
 
         a=Dichotomie(float(self.potentiometre.line1.text()),-float(self.potentiometre.line1.text()),(self.partie_droite.precision),
                      (self.fichier.vectors),(self.fichier.normals),float(self.partie_droite.rho),float(self.partie_droite.masse))
-        print(a)
+        print('retour dico',a)
 
-        self.partie_droite.LCD.display(a)
+        self.partie_droite.LCD.display(abs(a))
+        self.hide()
+        self.show()
+        self.potentiometre.line1.setText(str(signif(a,2)))
 
 
 

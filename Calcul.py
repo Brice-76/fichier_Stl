@@ -71,15 +71,17 @@ def CalculForce(a,normale,hauteur,Rho,masse):
 
 
 def Dichotomie(Haut,Bas,Precision,a,normale,Rho,masse):
+    #print('test',Haut,Bas,Precision,a,normale,Rho,masse)
     if Haut == 0 :
-        ecart =2
-    else :
-        ecart=Bas-Haut
+        Bas=-4
+        Haut=4
+    ecart=Bas-Haut
+    #print(ecart)
     while abs(ecart)>Precision:
         Zmilieu=(Haut+Bas)/2
-        print("ecart ",ecart," haut ",Haut," bas ",Bas," Zmilieu ",Zmilieu)
+        #print("ecart ",ecart," haut ",Haut," bas ",Bas," Zmilieu ",Zmilieu)
         difference=CalculForce(a,normale,Zmilieu,Rho,masse)
-        print("diff ",difference)
+        #print("diff ",difference)
         if difference<0 :
             Haut=Zmilieu
 
