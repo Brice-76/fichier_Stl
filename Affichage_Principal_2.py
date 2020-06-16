@@ -8,12 +8,9 @@ from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from Potentiometre import *
 from Partie_Droite import *
 from Partie_Gauche import *
-from Affichage_Principal_2 import *
 import math
-import sys
 
-
-class Widget_Matplotlib(QWidget) :
+class Widget_2(QWidget) :
     ''' Class comprenant l'affichage global de l'interface comprend également l'affichage du graph 3D MatplotLib
 
     lien : correspond au chemin du fichier stl par defaut ''
@@ -25,20 +22,14 @@ class Widget_Matplotlib(QWidget) :
         self.setWindowTitle('STL BOAT')
         #self.setFixedSize(1000,800)
         self.box=QGridLayout()
-        self.lien=lien
 
         A=QFont("DIN Condensed", 70)
         self.titre=QLabel("S T L   B O A T")
         self.titre.setAlignment(QtCore.Qt.AlignCenter | QtCore.Qt.AlignVCenter)
         self.titre.adjustSize()
         self.titre.setFont(A)
-        # partie Gauche
-        self.partie_gauche=Widget_Gauche(self.lien)
-        self.partie_gauche.button_load.clicked.connect(self.push_load)
-        # partie Droite
-        self.partie_droite=Widget_Droit(self.lien)
-
         # PLOT 3D
+        self.lien=lien
         self.fichier=mesh.Mesh.from_file(self.lien)
         self.kx=0
         self.ky=0
@@ -58,12 +49,17 @@ class Widget_Matplotlib(QWidget) :
         self.box.addWidget(self.titre,0,1)
         self.box.addWidget(self.potentiometre,1,1)
         self.box.addWidget(self.canvas,2,1)
-        self.box.addWidget(self.partie_gauche,0,0)
+
+        # partie Droite
+
+        self.partie_droite=Widget_Droit(self.lien)
         self.box.addWidget(self.partie_droite,0,2,0,2)
         self.setLayout(self.box)
 
-
-        self.show()
+        # partie Gauche
+        self.partie_gauche=Widget_Gauche(self.lien)
+        self.box.addWidget(self.partie_gauche,0,0)
+        self.partie_gauche.button_load.clicked.connect(self.push_load)
 
     def init_widget(self,fichier):
         ''' Initialisation de l'affichage 3D Matplotlib '''
@@ -79,10 +75,9 @@ class Widget_Matplotlib(QWidget) :
         self.axes.set_xlabel('X',fontsize=20)
         self.axes.set_ylabel('Y',fontsize=20)
         self.axes.set_zlabel('Z',fontsize=20)
-        self.partie_gauche.calcul_caracteristiques(fichier.vectors)
 
     def d1(self):
-        self.fichier.translate([0,0,(self.potentiometre.dial1.value()-self.kx)/10])
+        self.fichier.translate([0,0,self.potentiometre.dial1.value()-self.kx])
         self.kx=self.potentiometre.dial1.value()
         self.box.removeWidget(self.canvas)
         self.init_widget(self.fichier)
@@ -107,13 +102,12 @@ class Widget_Matplotlib(QWidget) :
         self.__lien=str(Ouverture[0])
         print('ok')
         window=Widget_Matplotlib(self.__lien)
-        window.exec()
-        self.close()
+        window.show()
 
         #self.__load_object.setText('Object : '+self.__lien)
 
 if __name__ == '__main__' :
-    app=QApplication(sys.argv)
+    app=QApplication([])
     window=Widget_Matplotlib('V_HULL.STL')
     window.show()
     app.exec_()
