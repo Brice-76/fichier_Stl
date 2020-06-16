@@ -39,11 +39,6 @@ class Widget_Gauche(QWidget) :
         self.setLayout(self.__layout)
 
 
-
-
-
-
-
     def calcul_caracteristiques(self,vecteurs):
 
 

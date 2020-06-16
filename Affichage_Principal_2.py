@@ -2,7 +2,7 @@ from stl import mesh,main
 from mpl_toolkits import mplot3d
 from matplotlib import pyplot
 from PySide2.QtWidgets import QMainWindow, QLabel, QPushButton, QVBoxLayout, QTableWidget, QApplication,QWidget, QHBoxLayout, QTextEdit,QHeaderView,QDialog,QDialogButtonBox,QBoxLayout,QDial,QGridLayout,QLineEdit
-from PySide2.QtGui import QFont
+from PySide2.QtGui import QFont,QIcon
 from PySide2 import QtCore
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from Potentiometre import *
@@ -24,22 +24,31 @@ class Widget_2(QWidget) :
         self.box=QGridLayout()
 
         A=QFont("DIN Condensed", 70)
-        self.titre=QLabel("S T L   B O A T")
-        self.titre.setAlignment(QtCore.Qt.AlignCenter | QtCore.Qt.AlignVCenter)
+
+        self.titre=QLabel()
+        self.titre.setPixmap('STL BOAT.jpg')
         self.titre.adjustSize()
         self.titre.setFont(A)
-        # PLOT 3D
-        self.lien=lien
-        self.fichier=mesh.Mesh.from_file(self.lien)
         self.kx=0
         self.ky=0
         self.kz=0
-        self.figure= pyplot.figure()
+        # PLOT 3D
+        self.lien=lien
+        self.fichier=mesh.Mesh.from_file(self.lien)
+
+        self.figure= pyplot.figure(1)
+
         self.fichier=mesh.Mesh.from_file(self.lien)
         self.scale = self.fichier.points.flatten()
         self.axes=mplot3d.Axes3D(self.figure)
         self.axes.auto_scale_xyz(self.scale, self.scale, self.scale)
         self.init_widget(self.fichier)
+        #mer
+        x=np.linspace(-5,5,20)
+        y=np.linspace(-5,5,20)
+        X, Y = np.meshgrid(x, y)
+        z=0*X+0*Y
+        self.axes.plot_wireframe(X,Y,z)
 
         self.potentiometre=Potentiometre()
         self.potentiometre.dial1.valueChanged.connect(self.d1)
@@ -59,7 +68,6 @@ class Widget_2(QWidget) :
         # partie Gauche
         self.partie_gauche=Widget_Gauche(self.lien)
         self.box.addWidget(self.partie_gauche,0,0)
-        self.partie_gauche.button_load.clicked.connect(self.push_load)
 
     def init_widget(self,fichier):
         ''' Initialisation de l'affichage 3D Matplotlib '''
@@ -69,7 +77,7 @@ class Widget_2(QWidget) :
         scale = self.fichier.points.flatten()
         self.axes=mplot3d.Axes3D(self.figure)
         self.axes.auto_scale_xyz(scale, scale, scale)
-        self.axes.add_collection3d(mplot3d.art3d.Poly3DCollection(fichier.vectors))
+        self.axes.add_collection3d(mplot3d.art3d.Poly3DCollection(fichier.vectors,color='red'))
         self.canvas = FigureCanvas(self.figure)
         self.box.addWidget(self.canvas,2,1)
         self.axes.set_xlabel('X',fontsize=20)
@@ -93,21 +101,12 @@ class Widget_2(QWidget) :
         self.kz=self.potentiometre.dial3.value()
         self.box.removeWidget(self.canvas)
         self.init_widget(self.fichier)
-    def push_load(self):
-        Ouverture = QFileDialog.getOpenFileName(self,
-                "Ouvrir un fichier",
-                "../Documents",
-                "STL (*.stl);; TIFF (*.tif);; All files (*.*)")
-        print(Ouverture[0])
-        self.__lien=str(Ouverture[0])
-        print('ok')
-        window=Widget_Matplotlib(self.__lien)
-        window.show()
+
 
         #self.__load_object.setText('Object : '+self.__lien)
 
 if __name__ == '__main__' :
     app=QApplication([])
-    window=Widget_Matplotlib('V_HULL.STL')
+    window=Widget_2('V_HULL.STL')
     window.show()
     app.exec_()

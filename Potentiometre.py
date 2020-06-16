@@ -71,14 +71,14 @@ class Potentiometre(QWidget) :
         a=self.line1.text()
         #a=str(a.replace(',','.'))
         print(a)
-        self.dial1.setValue(int(a)*10)
+        self.dial1.setValue(float(a)*10)
 
 
     def ligne2(self):
-        self.dial2.setValue(int(self.line2.text()))
+        self.dial2.setValue(float(self.line2.text()))
 
     def ligne3(self):
-        self.dial2.setValue(int(self.line3.text()))
+        self.dial2.setValue(float(self.line3.text()))
 
 
 if __name__ == '__main__' :
