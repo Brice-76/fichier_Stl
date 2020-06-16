@@ -69,6 +69,8 @@ class Widget_2(QWidget) :
         self.partie_gauche=Widget_Gauche(self.lien)
         self.box.addWidget(self.partie_gauche,0,0)
 
+        screenCaptureWidget(self.canvas,'/Users/brice/PycharmProjects/fichier_Stl')
+
     def init_widget(self,fichier):
         ''' Initialisation de l'affichage 3D Matplotlib '''
         pyplot.close()
@@ -102,8 +104,17 @@ class Widget_2(QWidget) :
         self.box.removeWidget(self.canvas)
         self.init_widget(self.fichier)
 
+def getRelativeFrameGeometry(widget):
+    g = widget.geometry()
+    fg = widget.frameGeometry()
+    return fg.translated(-g.left(),-g.top())
 
-        #self.__load_object.setText('Object : '+self.__lien)
+def screenCaptureWidget(widget, filename, fileformat='png'):
+    rfg = getRelativeFrameGeometry(widget)
+    pixmap =  QtGui.QPixmap.grabWindow(widget.winId(),
+                                       rfg.left(), rfg.top(),
+                                       rfg.width(), rfg.height())
+    pixmap.save(filename, fileformat)
 
 if __name__ == '__main__' :
     app=QApplication([])

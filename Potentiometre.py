@@ -4,9 +4,10 @@ from PySide2 import QtCore
 class Potentiometre(QWidget) :
 
     def __init__(self):
-        '''
-        Class d'initialisation des 3 potentiometres
-        Les fonctions à la fin (knob1,2,3 et ligne1,2,3) permettent de synchroniser la valeur du potentiometre avec le lineEdit
+        '''Class d'initialisation des 3 potentiometres
+
+=> Les fonctions à la fin (knob1,2,3 et ligne1,2,3) permettent de synchroniser la valeur du potentiometre avec le lineEdit
+=> dial1 > Translation Z ; dial2 > Rotation Y ; dial3 > Rotation X
         '''
         QWidget.__init__(self)
         self.__restriction1=QIntValidator(-180,180)

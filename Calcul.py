@@ -61,8 +61,8 @@ def CalculForce(a,normale,hauteur,Rho,masse):
     """On determine la norme de la resultante du poid plus d'archimède"""
 
     normeArchimede=np.linalg.norm(F_Archimede)
-    print("archi ",F_Archimede)
-    print("poid ",F_Poid)
+    #print("archi ",F_Archimede)
+    #print("poid ",F_Poid)
     normePoid=np.linalg.norm(F_Poid)
 
     difference= normeArchimede-normePoid #Si <0 alors Poid < Archimede sinon >0 alors Poid > Archimede
@@ -75,7 +75,10 @@ def Dichotomie(Haut,Bas,Precision,a,normale,Rho,masse):
     if Haut == 0 :
         Bas=-4
         Haut=4
+    Bas=-abs(Bas)
+    Haut=abs(Haut)
     ecart=Bas-Haut
+    print('BHE',Bas,Haut,ecart)
     #print(ecart)
     while abs(ecart)>Precision:
         Zmilieu=(Haut+Bas)/2

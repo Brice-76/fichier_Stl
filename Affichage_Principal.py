@@ -38,26 +38,25 @@ class Widget_Matplotlib(QWidget) :
         # partie Droite
         self.partie_droite=Widget_Droit(self.lien)
         self.partie_droite.button_compute.clicked.connect(self.push_compute)
-
+        self.kx=0
+        self.ky=0
+        self.kz=0
 
 
         # PLOT 3D
         self.fichier=mesh.Mesh.from_file(self.lien)
-        self.kx=0
-        self.ky=0
-        self.kz=0
         self.figure= pyplot.figure()
         self.fichier=mesh.Mesh.from_file(self.lien)
-        self.scale = self.fichier.points.flatten()
-        self.axes=mplot3d.Axes3D(self.figure)
-        self.axes.auto_scale_xyz(self.scale, self.scale, self.scale)
+        self.fichier_base=self.fichier
         self.init_widget(self.fichier)
 
+        # Connexion des potentiometres
         self.potentiometre=Potentiometre()
         self.potentiometre.dial1.valueChanged.connect(self.d1)
         self.potentiometre.dial2.valueChanged.connect(self.d2)
         self.potentiometre.dial3.valueChanged.connect(self.d3)
 
+        '''Association Layout'''
         self.box.addWidget(self.titre,0,1)
         self.box.addWidget(self.potentiometre,1,1)
         self.box.addWidget(self.canvas,2,1)
@@ -74,7 +73,7 @@ class Widget_Matplotlib(QWidget) :
         scale = self.fichier.points.flatten()
         self.axes=mplot3d.Axes3D(self.figure)
         self.axes.auto_scale_xyz(scale, scale, scale)
-        self.axes.add_collection3d(mplot3d.art3d.Poly3DCollection(fichier.vectors,color='black'))
+        self.axes.add_collection3d(mplot3d.art3d.Poly3DCollection(fichier.vectors,color='red'))
         self.canvas = FigureCanvas(self.figure)
         self.box.addWidget(self.canvas,2,1)
         self.axes.set_xlabel('X',fontsize=20)
@@ -105,21 +104,35 @@ class Widget_Matplotlib(QWidget) :
         self.box.removeWidget(self.canvas)
         self.init_widget(self.fichier)
     def push_load(self):
+        '''
+        Methode lors de l'appui du bouton 'load'
+
+=> Permet de changer de fichier STL en ouvrant une nouvelle fenêtre
+
+        '''
+
         Ouverture = QFileDialog.getOpenFileName(self,
                 "Ouvrir un fichier",
                 "../Documents",
                 "STL (*.stl);; TIFF (*.tif);; All files (*.*)")
         print(Ouverture[0])
         self.__lien=str(Ouverture[0])
-        print('ok')
         window=Widget_Matplotlib(self.__lien)
         window.exec()
         self.close()
         #self.__load_object.setText('Object : '+self.__lien)
 
+
     def push_compute(self):
+        '''
+        Methode lors de l'appui du bouton 'compute'
+
+=> Permet de lancer l'algorithme de dicotomie situé dans Calcul.py
+=> Change la valeur sur l'écran LCD en affichant le Tirant d'Eau 10^-2 près
+
+        '''
+
         if self.partie_droite.eau_de_mer.isChecked() == True :
-            print('yes')
             self.partie_droite.rho=1025
         else :
             self.partie_droite.rho=1000
@@ -128,7 +141,7 @@ class Widget_Matplotlib(QWidget) :
 
 
         a=Dichotomie(float(self.potentiometre.line1.text()),-float(self.potentiometre.line1.text()),(self.partie_droite.precision),
-                     (self.fichier.vectors),(self.fichier.normals),float(self.partie_droite.rho),float(self.partie_droite.masse))
+                     (self.fichier_base.vectors),(self.fichier_base.normals),float(self.partie_droite.rho),float(self.partie_droite.masse))
         print('retour dico',a)
 
         self.partie_droite.LCD.display(abs(a))
