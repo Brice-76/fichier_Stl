@@ -1,14 +1,15 @@
 from stl import mesh,main
 from mpl_toolkits import mplot3d
 from matplotlib import pyplot
-from PySide2.QtWidgets import QMainWindow, QLabel, QPushButton, QVBoxLayout, QTableWidget, QApplication,QWidget, QHBoxLayout, QTextEdit,QHeaderView,QDialog,QDialogButtonBox,QBoxLayout,QDial,QGridLayout,QLineEdit,QToolBar
+from PySide2.QtWidgets import QMainWindow, QLabel, QPushButton, QVBoxLayout, QTableWidget, QApplication,QWidget, QHBoxLayout, QTextEdit,QHeaderView,QDialog,QDialogButtonBox,QBoxLayout,QDial,QGridLayout,QLineEdit,QToolBar,QMessageBox
 from PySide2.QtGui import QFont
 from PySide2 import QtCore
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from Potentiometre import *
 from Partie_Droite import *
 from Partie_Gauche import *
-from Calcul import *
+from outil import *
+from graph import *
 import math
 import sys
 
@@ -30,7 +31,7 @@ class Widget_Matplotlib(QWidget) :
         A=QFont("DIN Condensed", 70)
         self.titre=QLabel("S T L   B O A T")
         self.titre.setAlignment(QtCore.Qt.AlignCenter | QtCore.Qt.AlignVCenter)
-        self.titre.adjustSize()
+        #self.titre.adjustSize()
         self.titre.setFont(A)
         # partie Gauche
         self.partie_gauche=Widget_Gauche(self.lien)
@@ -45,9 +46,9 @@ class Widget_Matplotlib(QWidget) :
 
         # PLOT 3D
         self.fichier=mesh.Mesh.from_file(self.lien)
+        self.fichier2=self.fichier
         self.figure= pyplot.figure()
         self.fichier=mesh.Mesh.from_file(self.lien)
-        self.fichier_base=self.fichier
         self.init_widget(self.fichier)
 
         # Connexion des potentiometres
@@ -129,30 +130,59 @@ class Widget_Matplotlib(QWidget) :
 
 => Permet de lancer l'algorithme de dicotomie situé dans Calcul.py
 => Change la valeur sur l'écran LCD en affichant le Tirant d'Eau 10^-2 près
-
+=> création du graph de dicotomie
+=> Verification de la valeur de la précision/tolérance
+=> oblige la translation d'être supérieur à 2
         '''
 
+        #verif tolérance
+        if float(self.partie_droite.precision) >= 1 or float(self.partie_droite.precision)<=0 :
+            self.message_box_erreur('''Tolérance
+Erreur : la tolérance doit être inferieur à 1 et positive
+Erreur : la tolérance doit être un nombre''')
+            return
         if self.partie_droite.eau_de_mer.isChecked() == True :
             self.partie_droite.rho=1025
         else :
             self.partie_droite.rho=1000
-        print((self.potentiometre.line1.text()),(self.potentiometre.line1.text()),(self.partie_droite.precision),
-                     (self.partie_droite.rho),(self.partie_droite.masse))
+
+        # verification de la translation
+        translation=abs(self.potentiometre.dial1.value()/10)
+        if translation <=2 :
+            translation=2
+            self.message_box_erreur('La translation est definie à 2')
 
 
-        a=Dichotomie(float(self.potentiometre.line1.text()),-float(self.potentiometre.line1.text()),(self.partie_droite.precision),
-                     (self.fichier_base.vectors),(self.fichier_base.normals),float(self.partie_droite.rho),float(self.partie_droite.masse))
-        print('retour dico',a)
+        #print((self.potentiometre.line1.text()),(self.potentiometre.line1.text()),(self.partie_droite.precision),(self.partie_droite.rho),(self.partie_droite.masse))
+        a=Dichotomie(translation,-translation,float(self.partie_droite.precision),self.fichier2.vectors,self.fichier2.normals,float(self.partie_droite.rho),float(self.partie_droite.masse))
+        #print('retour dico',a[0])
 
-        self.partie_droite.LCD.display(abs(a))
-        self.hide()
-        self.show()
-        self.potentiometre.line1.setText(str(signif(a,2)))
+        self.partie_droite.LCD.display(abs(a[0]))
+        self.potentiometre.dial1.setValue(a[0]*10)
+
+        # graph
+
+        self.graph = Widget_Graph(self.lien,float(self.partie_droite.precision),float(self.partie_droite.rho),float(self.partie_droite.masse),translation)
+        self.partie_droite.layout.addWidget(self.graph,13,0,2,0)
+        self.showFullScreen()
+
+
+
+    def message_box_erreur(self,text):
+        '''Fenetre Pop-Up affichant un message d'erreur'''
+        message=QMessageBox()
+        message.setText(text)
+        message.setWindowTitle('Erreur')
+        icon=(QtGui.QPixmap('091-notification.png'))
+        message.setWindowIcon(icon)
+        message.exec_()
+
+
 
 
 
 if __name__ == '__main__' :
-    app=QApplication(sys.argv)
-    window=Widget_Matplotlib('V_HULL.STL')
+    app=QApplication([])
+    window=Widget_Matplotlib('V_HULL_Normals_Outward.STL')
     window.show()
     app.exec_()

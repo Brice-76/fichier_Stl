@@ -1,5 +1,5 @@
 from PySide2.QtWidgets import QMainWindow, QLabel, QPushButton, QVBoxLayout, QTableWidget, QApplication,QWidget, QHBoxLayout, QTextEdit,QHeaderView,QDialog,QDialogButtonBox,QBoxLayout,QDial,QGridLayout,QLineEdit
-from PySide2.QtGui import QIntValidator,QDoubleValidator
+from PySide2.QtGui import QIntValidator,QDoubleValidator,QFont
 from PySide2 import QtCore
 class Potentiometre(QWidget) :
 
@@ -12,6 +12,14 @@ class Potentiometre(QWidget) :
         QWidget.__init__(self)
         self.__restriction1=QIntValidator(-180,180)
         self.__restriction2=QDoubleValidator(-10,10,2)
+
+        A=QFont("DIN Condensed", 70)
+        self.titre=QLabel("S T L   B O A T")
+        self.titre.setAlignment(QtCore.Qt.AlignCenter | QtCore.Qt.AlignVCenter)
+        #self.titre.adjustSize()
+        self.titre.setFont(A)
+
+
         self.dial1=QDial()
         self.dial1.setValue(0)
         self.dial1.setMaximum(100)
@@ -46,15 +54,16 @@ class Potentiometre(QWidget) :
         self.line3.setValidator(self.__restriction1)
         self.line3.setText('0')
         self.line3.editingFinished.connect(self.ligne3)
-        self.layout.addWidget(self.dial1,0,0)
-        self.layout.addWidget(self.dial2,0,1)
-        self.layout.addWidget(self.dial3,0,2)
-        self.layout.addWidget(self.__lab1,1,0)
-        self.layout.addWidget(self.__lab2,1,1)
-        self.layout.addWidget(self.__lab3,1,2)
-        self.layout.addWidget(self.line1,2,0)
-        self.layout.addWidget(self.line2,2,1)
-        self.layout.addWidget(self.line3,2,2)
+        self.layout.addWidget(self.titre,0,0,1,0)
+        self.layout.addWidget(self.dial1,1,0)
+        self.layout.addWidget(self.dial2,1,1)
+        self.layout.addWidget(self.dial3,1,2)
+        self.layout.addWidget(self.__lab1,2,0)
+        self.layout.addWidget(self.__lab2,2,1)
+        self.layout.addWidget(self.__lab3,2,2)
+        self.layout.addWidget(self.line1,3,0)
+        self.layout.addWidget(self.line2,3,1)
+        self.layout.addWidget(self.line3,3,2)
         self.setLayout(self.layout)
         self.show()
 

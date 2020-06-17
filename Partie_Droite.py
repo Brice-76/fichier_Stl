@@ -3,6 +3,7 @@ from PySide2 import QtCore
 from PySide2.QtGui import QFont,QIntValidator
 from PySide2 import QtGui
 import math
+from graph import *
 class Widget_Droit(QWidget) :
     '''Class portant la partie droite de l'IHM
 
@@ -10,9 +11,9 @@ class Widget_Droit(QWidget) :
 => LCD permet l'affichage de la valeur du Tirant d'Eau à 10^-2 près
     '''
 
-    def __init__(self,obj):
+    def __init__(self,lien):
         QWidget.__init__(self)
-        self.setFixedWidth(315)
+        self.setFixedWidth(340)
 
         self.__restriction=QIntValidator()
         self.precision=0
@@ -21,8 +22,10 @@ class Widget_Droit(QWidget) :
         self.__label_title=QLabel('''Tirant d'Eau''')
         self.__label_title.setAlignment(QtCore.Qt.AlignCenter | QtCore.Qt.AlignVCenter)
         A=QFont("DIN Condensed", 45)
+        self.__label_title.setFixedHeight(100)
+
         self.__label_title.setFont(A)
-        self.__layout=QGridLayout()
+        self.layout=QGridLayout()
         self.button_compute=QPushButton('Compute')
         self.button_compute.sizeHint()
         self.__label_precision=QLabel('Tolérance')
@@ -48,17 +51,17 @@ class Widget_Droit(QWidget) :
         self.LCD=QLCDNumber()
 
         '''Association Layout'''
-        self.__layout.addWidget(self.__label_title,0,0,1,0)
-        self.__layout.addWidget(self.__label_precision,2,0,1,0)
-        self.__layout.addWidget(self.__text_precision,3,0,1,0)
-        self.__layout.addWidget(self.__label_poids,4,0,1,0)
-        self.__layout.addWidget(self.__text_poids,5,0,1,0)
-        self.__layout.addWidget(self.eau_de_mer,8,0)
-        self.__layout.addWidget(self.eau_douce,8,1)
-        self.__layout.addWidget(self.button_compute,9,0,1,0)
-        self.__layout.addWidget(self.__label_LCD,11,0,1,0)
-        self.__layout.addWidget(self.LCD,12,0,1,0)
-        self.setLayout(self.__layout)
+        self.layout.addWidget(self.__label_title, 0, 0, 1, 0)
+        self.layout.addWidget(self.__label_precision, 2, 0, 1, 0)
+        self.layout.addWidget(self.__text_precision, 3, 0, 1, 0)
+        self.layout.addWidget(self.__label_poids, 4, 0, 1, 0)
+        self.layout.addWidget(self.__text_poids, 5, 0, 1, 0)
+        self.layout.addWidget(self.eau_de_mer, 8, 0)
+        self.layout.addWidget(self.eau_douce, 8, 1)
+        self.layout.addWidget(self.button_compute, 9, 0, 1, 0)
+        self.layout.addWidget(self.__label_LCD, 11, 0, 1, 0)
+        self.layout.addWidget(self.LCD, 12, 0, 1, 0)
+        self.setLayout(self.layout)
 
     def l1(self):
         ''' lors d'une modif LineEdit1 => enregistrement sous la variable'''

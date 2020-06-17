@@ -1,5 +1,5 @@
 import numpy as np
-
+import math
 def produitVectoriel(u,v):
     w=np.cross(u,v)
     return w
@@ -69,24 +69,42 @@ def CalculForce(a,normale,hauteur,Rho,masse):
 
     return difference
 
+def signif(x, digit):
+    ''' Permet de retourné un digit avec un nombre de chiffre significatif defini par digit
+    Source : http://www.python-simple.com/python-langage/operations.php'''
+    if x == 0:
+        return 0
+    return round(x, digit - int(math.floor(math.log10(abs(x)))) - 1)
 
-def Dichotomie(Precision,a,normale,Rho,masse):
-    #print('test',Haut,Bas,Precision,a,normale,Rho,masse)
-    Haut=10
-    Bas=-10
-
+def Dichotomie(Haut,Bas,Precision,a,normale,Rho,masse):
+    print('precision : ',Precision,'rho : ',Rho,'masse : ',masse,'Haut,bas :',Haut,Bas)
+    Haut=4
+    Bas=-4
     ecart=Bas-Haut
-    print('BHE',Bas,Haut,ecart)
-    #print(ecart)
+    nb_repetition=0
+    listeZmilieu=[]
     while abs(ecart)>Precision:
         Zmilieu=(Haut+Bas)/2
         #print("ecart ",ecart," haut ",Haut," bas ",Bas," Zmilieu ",Zmilieu)
         difference=CalculForce(a,normale,Zmilieu,Rho,masse)
         #print("diff ",difference)
+        nb_repetition+=1
+        listeZmilieu.append(Zmilieu)
         if difference<0 :
             Haut=Zmilieu
 
         else : Bas=Zmilieu
         ecart=Haut-Bas
+    print(Zmilieu)
+    return Zmilieu,nb_repetition,listeZmilieu
 
-    return Zmilieu
+
+def isfloat(str):
+    '''retourne si le str est un nombre ou non
+    https://www.developpez.net/forums/d1473466/autres-langages/python/general-python/python-verifier-variable-nombre/
+    '''
+    try:
+        float(str)
+    except ValueError:
+        return False
+    return True

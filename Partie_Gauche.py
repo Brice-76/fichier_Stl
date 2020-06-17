@@ -4,46 +4,60 @@ from stl import mesh,main
 from mpl_toolkits import mplot3d
 from matplotlib import pyplot
 import numpy as np
-from PySide2 import QtCore
+from PySide2 import QtCore,QtGui
 from PySide2.QtGui import QFont
+
 import math
 class Widget_Gauche(QWidget) :
     ''' Class portant la partie gauche de l'IHM
 
 => Le calcul des caracteristiques s'éffectue à chaque rotation ou translation du .stl
+=> Les surfaces considéré imergé sont s'elles dont le point Z du baricentre est inferieur à 0
 => Permet le changement de fichier STL
+
 
     '''
 
     def __init__(self,lien):
         QWidget.__init__(self)
-        self.setFixedWidth(315)
+        self.setFixedWidth(340)
         self.__layout=QGridLayout()
         self.__lien=lien
 
         fichier=mesh.Mesh.from_file(self.__lien)
         vecteurs=(fichier.vectors)
         self.button_load=QPushButton('Load')
+        self.button_load.setFixedHeight(60)
         self.__caracteristiques=QLabel()
         self.calcul_caracteristiques(vecteurs)
         A=QFont("DIN Condensed", 45)
         self.__title=QLabel('Gestion des Fichiers')
         self.__title.setFont(A)
         self.__title.setAlignment(QtCore.Qt.AlignCenter | QtCore.Qt.AlignVCenter)
+        self.__title.setFixedHeight(100)
 
         A=QFont("DIN Condensed", 20)
         self.__title_caracteristiques=QLabel('Caractéristiques')
         self.__title_caracteristiques.setAlignment(QtCore.Qt.AlignCenter | QtCore.Qt.AlignVCenter)
         self.__title_caracteristiques.setFont(A)
+        self.__title_caracteristiques.setFixedHeight(80)
         self.__load_object=QLabel('Objet : '+self.__lien)
+        self.__load_object.setFixedHeight(40)
 
-
+        self.button_save=QPushButton('Save')
+        self.button_save.setFixedHeight(60)
+        # self.__img=QLabel()
+        # self.__img.setPixmap(QtGui.QPixmap('anchor.png'))
+        # self.__img.setScaledContents(True)
+        # self.__img.setFixedHeight(300)
         '''Association Layout'''
-        self.__layout.addWidget(self.__title)
+        self.__layout.addWidget(self.__title,0,0)
         self.__layout.addWidget(self.__load_object)
         self.__layout.addWidget(self.button_load)
+        self.__layout.addWidget(self.button_save)
         self.__layout.addWidget(self.__title_caracteristiques)
         self.__layout.addWidget(self.__caracteristiques)
+        #self.__layout.addWidget(self.__img)
         self.setLayout(self.__layout)
 
 
