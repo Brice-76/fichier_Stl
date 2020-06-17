@@ -31,7 +31,7 @@ class Widget_Droit(QWidget) :
         self.__label_precision=QLabel('Tolérance')
         self.__label_precision.setAlignment(QtCore.Qt.AlignCenter | QtCore.Qt.AlignVCenter)
         self.__text_precision=QLineEdit()
-        self.__label_poids=QLabel('Cas de Masse (kg)')
+        self.__label_poids=QLabel('Masse (kg)')
         self.__label_poids.setAlignment(QtCore.Qt.AlignCenter | QtCore.Qt.AlignVCenter)
         self.__text_poids=QLineEdit()
         self.__text_poids.setValidator(self.__restriction)

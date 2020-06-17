@@ -14,9 +14,8 @@ class Widget_Graph(QWidget) :
         self.canvas = FigureCanvas(self.fig)
         axes=pyplot.axes()
 
-        fichier=mesh.Mesh.from_file(lien)
-        a=(fichier.vectors)
-        normale=(fichier.normals)
+        a=(lien.vectors)
+        normale=(lien.normals)
 
 
 
@@ -26,7 +25,7 @@ class Widget_Graph(QWidget) :
         outil.translation(2,a,hauteur)
         x=np.linspace(0,nb_rep,nb_rep)
         axes.plot(x,liste)
-        pyplot.suptitle('Dicotomie')
+        pyplot.suptitle('Dichotomie')
         pyplot.xlabel('nombre de répetition')
         pyplot.ylabel('''valeur tirant d'eau''')
         #pyplot.show()

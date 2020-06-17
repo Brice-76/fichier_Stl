@@ -42,7 +42,7 @@ class Widget_Gauche(QWidget) :
         self.__title_caracteristiques.setFont(A)
         self.__title_caracteristiques.setFixedHeight(80)
         self.__load_object=QLabel('Objet : '+self.__lien)
-        self.__load_object.setFixedHeight(40)
+        self.__load_object.setFixedHeight(60)
 
         self.button_save=QPushButton('Save')
         self.button_save.setFixedHeight(60)

@@ -145,11 +145,11 @@ Erreur : la tolérance doit être un nombre''')
         translation=abs(self.potentiometre.dial1.value()/10)
         if translation <=2 :
             translation=2
-            self.message_box_erreur('La translation est definie à 2')
+            #self.message_box_erreur('La translation est definie à 2')
 
 
         #print((self.potentiometre.line1.text()),(self.potentiometre.line1.text()),(self.partie_droite.precision),(self.partie_droite.rho),(self.partie_droite.masse))
-        a=Dichotomie(translation,-translation,float(self.partie_droite.precision),self.fichier2.vectors,self.fichier2.normals,float(self.partie_droite.rho),float(self.partie_droite.masse))
+        a=Dichotomie(translation,-translation,float(self.partie_droite.precision),self.fichier.vectors,self.fichier.normals,float(self.partie_droite.rho),float(self.partie_droite.masse))
         #print('retour dico',a[0])
 
         self.partie_droite.LCD.display(abs(a[0]))
@@ -157,8 +157,10 @@ Erreur : la tolérance doit être un nombre''')
 
         # graph
 
-        self.graph = Widget_Graph(self.lien,float(self.partie_droite.precision),float(self.partie_droite.rho),float(self.partie_droite.masse),translation)
+        self.graph = Widget_Graph(self.fichier,float(self.partie_droite.precision),float(self.partie_droite.rho),float(self.partie_droite.masse),translation)
         self.partie_droite.layout.addWidget(self.graph,13,0,2,0)
+        self.hide()
+        self.show()
         self.showFullScreen()
 
 
