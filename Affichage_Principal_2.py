@@ -42,9 +42,7 @@ class Widget_Matplotlib(QWidget) :
 
         # PLOT 3D
         self.fichier=mesh.Mesh.from_file(self.lien)
-        self.fichier2=self.fichier
         self.figure= pyplot.figure()
-        self.fichier=mesh.Mesh.from_file(self.lien)
         self.init_widget(self.fichier)
 
         # Connexion des potentiometres
@@ -153,7 +151,6 @@ Erreur : la tolérance doit être un nombre''')
         #print('retour dico',a[0])
 
         self.partie_droite.LCD.display(abs(a[0]))
-        self.potentiometre.dial1.setValue(a[0]*10)
 
         # graph
 

@@ -25,30 +25,95 @@ def calculeHauteurFacette(A,B,C): # trois points sous forme de matrice avec 3 co
     hauteur=(A[2]+B[2]+C[2])/3
     return hauteur
 
-
 def CalculForce(a,normale,hauteur,Rho,masse):
     F_Archimede=0
     g=9.81
     Stot=0
+    plan=[0,0,1,0]#coef de l'equation cartésienne du plan de l'eau
     """ajustement de la hauteur de la coque """
     translation(2,a,hauteur)
 
     for n in range(0,len(a)): #on parcour pour le nombre de facettes
 
         """Calcule de la surface total et de chaque facette"""
-        U=calculVecteur(a[n][0],a[n][1])
-        V=calculVecteur(a[n][0],a[n][2])
-        Ds=norme(produitVectoriel(U,V))
+
+        DsVec,Ds=calculeSurface(a[n][0],a[n][1],a[n][2],normale[n])
         Stot+=Ds #surface totale de la coque
-        DsVec=Ds*normale[n]
+
 
         """Calcule de la hauteur d'une facette """
-        Zfk=calculeHauteurFacette(a[n][0],a[n][1],a[n][2])
+        #Zfk=calculeHauteurFacette(a[n][0],a[n][1],a[n][2])
 
         """condition pour que une facette soit compté comme immergé """
-        if Zfk <0:
+        if a[n][0][2] <0 and a[n][1][2]<0 and a[n][2][2]<0 :#Totalement immergé
+            #print("immergé")
+            Zfk=calculeHauteurFacette(a[n][0],a[n][1],a[n][2])
             F_Archimede+=Rho*g*Zfk*DsVec
-        else : F_Archimede+=0
+
+        elif a[n][0][2] >0 and a[n][1][2] >0 and a[n][2][2] >0:#Totalement non immergé
+            F_Archimede+=0
+            #print("pas immergé")
+
+        elif a[n][0][2] >0 and a[n][1][2] <0 and a[n][2][2] <0:#seul le premier point de la facette n'est pas immergé
+            #print("1")
+            #on calcule les vecteurs driecteurs du premier point avec les autres
+            D=DetPointPlanDroite(a[n][0],a[n][1],plan)
+            #print("le point D ",D)
+            E=DetPointPlanDroite(a[n][0],a[n][2],plan)
+            #print("le point E ",E)
+            #On calcule la surface des deux nouvelles facettes créées puis leur force d'archimede
+            Zfk=calculeHauteurFacette(a[n][1],D,E)
+            DsVec,Ds=calculeSurface(a[n][1],D,E,normale[n])
+            F_Archimede+=Rho*g*Zfk*DsVec
+            Zfk=calculeHauteurFacette(a[n][2],D,E)
+            DsVec,Ds=calculeSurface(a[n][2],D,E,normale[n])
+            F_Archimede+=Rho*g*Zfk*DsVec
+
+        elif a[n][0][2] <0 and a[n][1][2] >0 and a[n][2][2] <0:#seul le deuxème point de la facette n'est pas immergé
+            #print("2")
+            D=DetPointPlanDroite(a[n][1],a[n][0],plan)
+            E=DetPointPlanDroite(a[n][1],a[n][2],plan)
+            Zfk=calculeHauteurFacette(a[n][0],D,E)
+            DsVec,Ds=calculeSurface(a[n][0],D,E,normale[n])
+            F_Archimede+=Rho*g*Zfk*DsVec
+            Zfk=calculeHauteurFacette(a[n][2],D,E)
+            DsVec,Ds=calculeSurface(a[n][2],D,E,normale[n])
+            F_Archimede+=Rho*g*Zfk*DsVec
+
+
+        elif a[n][0][2] <0 and a[n][1][2] <0 and a[n][2][2] >0:#seul le troisième point de la facette n'est pas immergé
+            #print("3")
+            D=DetPointPlanDroite(a[n][2],a[n][0],plan)
+            E=DetPointPlanDroite(a[n][2],a[n][1],plan)
+            Zfk=calculeHauteurFacette(a[n][0],D,E)
+            DsVec,Ds=calculeSurface(a[n][0],D,E,normale[n])
+            F_Archimede+=Rho*g*Zfk*DsVec
+            Zfk=calculeHauteurFacette(a[n][1],D,E)
+            DsVec,Ds=calculeSurface(a[n][1],D,E,normale[n])
+            F_Archimede+=Rho*g*Zfk*DsVec
+
+        elif a[n][0][2] >0 and a[n][1][2] >0 and a[n][2][2] <0:#seul le troisième point de la facette est immergé
+            #print("4")
+            D=DetPointPlanDroite(a[n][2],a[n][0],plan)
+            E=DetPointPlanDroite(a[n][2],a[n][1],plan)
+            Zfk=calculeHauteurFacette(a[n][2],D,E)
+            DsVec,Ds=calculeSurface(a[n][2],D,E,normale[n])
+            F_Archimede+=Rho*g*Zfk*DsVec
+
+        elif a[n][0][2] >0 and a[n][1][2] <0 and a[n][2][2] >0:#seul le deuxième point de la facette est immergé
+            #print("5")
+            D=DetPointPlanDroite(a[n][1],a[n][0],plan)
+            E=DetPointPlanDroite(a[n][1],a[n][2],plan)
+            Zfk=calculeHauteurFacette(a[n][1],D,E)
+            DsVec,Ds=calculeSurface(a[n][1],D,E,normale[n])
+            F_Archimede+=Rho*g*Zfk*DsVec
+        elif a[n][0][2] <0 and a[n][1][2] >0 and a[n][2][2] >0:#seul le premier point de la facette est immergé
+            #print(6)
+            D=DetPointPlanDroite(a[n][0],a[n][1],plan)
+            E=DetPointPlanDroite(a[n][0],a[n][2],plan)
+            Zfk=calculeHauteurFacette(a[n][0],D,E)
+            DsVec,Ds=calculeSurface(a[n][0],D,E,normale[n])
+            F_Archimede+=Rho*g*Zfk*DsVec
 
     """On remet la hauteur de la coque"""
     translation(2,a,-hauteur)
@@ -61,13 +126,14 @@ def CalculForce(a,normale,hauteur,Rho,masse):
     """On determine la norme de la resultante du poid plus d'archimède"""
 
     normeArchimede=np.linalg.norm(F_Archimede)
-    #print("archi ",F_Archimede)
-    #print("poid ",F_Poid)
+    print("archi ",F_Archimede)
+    print("poid ",F_Poid)
     normePoid=np.linalg.norm(F_Poid)
 
     difference= normeArchimede-normePoid #Si <0 alors Poid < Archimede sinon >0 alors Poid > Archimede
 
     return difference
+
 
 def signif(x, digit):
     ''' Permet de retourné un digit avec un nombre de chiffre significatif defini par digit
@@ -78,8 +144,8 @@ def signif(x, digit):
 
 def Dichotomie(Haut,Bas,Precision,a,normale,Rho,masse):
     print('precision : ',Precision,'rho : ',Rho,'masse : ',masse,'Haut,bas :',Haut,Bas)
-    Haut=4
-    Bas=-4
+    Haut+=1
+    Bas-=1
     ecart=Bas-Haut
     nb_repetition=0
     listeZmilieu=[]
@@ -108,3 +174,20 @@ def isfloat(str):
     except ValueError:
         return False
     return True
+
+
+def DetPointPlanDroite(A,B,plan):#A et B deux points de R3 un plan une equation cartésienne d'un plan de R3 de la forme ax+by+cz+d
+    #plan est une liste des coef a b c d
+    AB=calculVecteur(A,B)
+    t=(-(plan[3]+plan[0]*A[0]+plan[1]*A[1]+plan[2]*A[2]))/(plan[0]*AB[0]+plan[1]*AB[1]+plan[2]*AB[2])
+    #t=-(d+a*Xa+b*Ya+c*Za)/(a*Xab+b*Yab+c*Zab)
+    C=(A[0]+AB[0]*t,A[1]+AB[1]*t,A[2]+AB[2]*t)
+    return C
+
+
+def calculeSurface(A,B,C,vec): # trois points sous forme de matrice avec 3 coords et un vecteur normal
+    U=calculVecteur(A,B)
+    V=calculVecteur(A,C)
+    Ds=norme(produitVectoriel(U,V))
+    DsVec=Ds*vec
+    return DsVec,Ds
