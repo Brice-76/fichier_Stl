@@ -21,7 +21,7 @@ def calculVecteur(A,B):#deux points avec trois coords sous forme de matrice
     return vecteur
 
 
-def calculeHauteurFacette(A,B,C): # trois points sous forme de matrice avec 3 coords
+def calculeHauteurFacette(A,B,C): # trois points sous forme de matrice avec 3 coordonées
     hauteur=(A[2]+B[2]+C[2])/3
     return hauteur
 

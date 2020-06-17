@@ -155,14 +155,10 @@ Erreur : la tolérance doit être un nombre''')
         self.partie_droite.LCD.display(abs(a[0]))
 
         # graph
-
         self.graph = Widget_Graph(self.fichier,float(self.partie_droite.precision),float(self.partie_droite.rho),float(self.partie_droite.masse),translation,float(self.potentiometre.dial1.value())/10)
         self.partie_droite.layout.addWidget(self.graph,13,0,2,0)
         self.hide()
         self.show()
-        self.showFullScreen()
-
-
 
     def message_box_erreur(self,text):
         '''Fenetre Pop-Up affichant un message d'erreur'''
@@ -180,7 +176,7 @@ Erreur : la tolérance doit être un nombre''')
                 "Name")
         url=Ouverture[0]+'.txt'
         fichier = open(url, "w")
-        fichier.write()
+        fichier.write('')
 
 
 
