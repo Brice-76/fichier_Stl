@@ -8,7 +8,7 @@ import numpy as np
 
 
 class Widget_Graph(QWidget) :
-    def __init__(self,lien,precision,rho,masse,translation) :
+    def __init__(self,lien,precision,rho,masse,translation,potentiometre) :
         QWidget.__init__(self)
         self.fig = pyplot.figure()
         self.canvas = FigureCanvas(self.fig)
@@ -21,7 +21,7 @@ class Widget_Graph(QWidget) :
 
         """baisser la présicion"""
 
-        hauteur,nb_rep,liste=outil.Dichotomie(translation,-translation,precision,a,normale,rho,masse)
+        hauteur,nb_rep,liste=outil.Dichotomie(translation,-translation,precision,a,normale,rho,masse,potentiometre)
         outil.translation(2,a,hauteur)
         x=np.linspace(0,nb_rep,nb_rep)
         axes.plot(x,liste)

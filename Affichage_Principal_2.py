@@ -32,6 +32,7 @@ class Widget_Matplotlib(QWidget) :
         # partie Gauche
         self.partie_gauche=Widget_Gauche(self.lien)
         self.partie_gauche.button_load.clicked.connect(self.push_load)
+        self.partie_gauche.button_save.clicked.connect(self.push_save)
         # partie Droite
         self.partie_droite=Widget_Droit(self.lien)
         self.partie_droite.button_compute.clicked.connect(self.push_compute)
@@ -147,14 +148,15 @@ Erreur : la tolérance doit être un nombre''')
 
 
         #print((self.potentiometre.line1.text()),(self.potentiometre.line1.text()),(self.partie_droite.precision),(self.partie_droite.rho),(self.partie_droite.masse))
-        a=Dichotomie(translation,-translation,float(self.partie_droite.precision),self.fichier.vectors,self.fichier.normals,float(self.partie_droite.rho),float(self.partie_droite.masse))
+        a=Dichotomie(translation,-translation,float(self.partie_droite.precision),self.fichier.vectors,self.fichier.normals,
+                     float(self.partie_droite.rho),float(self.partie_droite.masse),float(self.potentiometre.dial1.value())/10)
         #print('retour dico',a[0])
 
         self.partie_droite.LCD.display(abs(a[0]))
 
         # graph
 
-        self.graph = Widget_Graph(self.fichier,float(self.partie_droite.precision),float(self.partie_droite.rho),float(self.partie_droite.masse),translation)
+        self.graph = Widget_Graph(self.fichier,float(self.partie_droite.precision),float(self.partie_droite.rho),float(self.partie_droite.masse),translation,float(self.potentiometre.dial1.value())/10)
         self.partie_droite.layout.addWidget(self.graph,13,0,2,0)
         self.hide()
         self.show()
@@ -170,6 +172,15 @@ Erreur : la tolérance doit être un nombre''')
         icon=(QtGui.QPixmap('091-notification.png'))
         message.setWindowIcon(icon)
         message.exec_()
+
+    def push_save(self):
+        print('save')
+        Ouverture = QFileDialog.getSaveFileName(self,
+                "Sauvegarde",
+                "Name")
+        url=Ouverture[0]+'.txt'
+        fichier = open(url, "w")
+        fichier.write()
 
 
 

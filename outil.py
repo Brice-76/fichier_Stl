@@ -142,7 +142,7 @@ def signif(x, digit):
         return 0
     return round(x, digit - int(math.floor(math.log10(abs(x)))) - 1)
 
-def Dichotomie(Haut,Bas,Precision,a,normale,Rho,masse):
+def Dichotomie(Haut,Bas,Precision,a,normale,Rho,masse,potentiometre):
     print('precision : ',Precision,'rho : ',Rho,'masse : ',masse,'Haut,bas :',Haut,Bas)
     Haut+=1
     Bas-=1
@@ -152,7 +152,8 @@ def Dichotomie(Haut,Bas,Precision,a,normale,Rho,masse):
     while abs(ecart)>Precision:
         Zmilieu=(Haut+Bas)/2
         #print("ecart ",ecart," haut ",Haut," bas ",Bas," Zmilieu ",Zmilieu)
-        difference=CalculForce(a,normale,Zmilieu,Rho,masse)
+
+        difference=CalculForce(a,normale,Zmilieu-potentiometre,Rho,masse)
         #print("diff ",difference)
         nb_repetition+=1
         listeZmilieu.append(Zmilieu)
