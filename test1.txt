@@ -1,0 +1,17 @@
+Compte rendu du test sur : V_HULL_Normals_Outward.STL
+
+
+Caracteristiques : 
+Surface : 21.31 m2
+Surface immergé : 0 m2
+Nombre de facette : 8
+Nombre de facette immergé : 0
+
+Déplacement : 
+Translation Z : 0.0
+Rotation Y : 9.8
+Rotation Y : -13.3
+
+Tirant d'eau: 2.35975341796875
+Masse : 2000.0
+Precision : 0.003
