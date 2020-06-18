@@ -13,7 +13,7 @@ class Potentiometre(QWidget) :
         self.__restriction1=QIntValidator(-180,180)
         self.__restriction2=QDoubleValidator(-10,10,2)
 
-        A=QFont("DIN Condensed", 70)
+        A=QFont("Arial", 70)
         self.titre=QLabel("S T L   B O A T")
         self.titre.setAlignment(QtCore.Qt.AlignCenter | QtCore.Qt.AlignVCenter)
         #self.titre.adjustSize()

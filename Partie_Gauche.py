@@ -1,4 +1,4 @@
-from PySide2.QtWidgets import QMainWindow, QLabel, QPushButton, QVBoxLayout, QTableWidget, QApplication,QWidget, QHBoxLayout, QTextEdit,QHeaderView,QDialog,QDialogButtonBox,QBoxLayout,QDial,QGridLayout,QLineEdit,QFileDialog
+from PySide2.QtWidgets import QMainWindow, QLabel, QPushButton, QVBoxLayout, QTableWidget, QApplication,QWidget, QHBoxLayout, QTextEdit,QHeaderView,QDialog,QDialogButtonBox,QBoxLayout,QDial,QGridLayout,QSizePolicy,QFileDialog
 import stl
 from stl import mesh,main
 from mpl_toolkits import mplot3d
@@ -28,36 +28,52 @@ class Widget_Gauche(QWidget) :
         vecteurs=(fichier.vectors)
         self.button_load=QPushButton('Load')
         self.button_load.setFixedHeight(60)
+        self.button_load.setIcon(QtGui.QIcon('png/050-download.png'))
+        self.button_load.setIconSize(QtCore.QSize(30,30))
         self.__caracteristiques=QLabel()
         self.calcul_caracteristiques(vecteurs)
-        A=QFont("DIN Condensed", 45)
+
+        A=QFont("Arial", 31, QFont.Bold)
         self.__title=QLabel('Gestion des Fichiers')
         self.__title.setFont(A)
         self.__title.setAlignment(QtCore.Qt.AlignCenter | QtCore.Qt.AlignVCenter)
         self.__title.setFixedHeight(100)
 
-        A=QFont("DIN Condensed", 20)
+        A=QFont("Arial", 25)
         self.__title_caracteristiques=QLabel('Caractéristiques')
         self.__title_caracteristiques.setAlignment(QtCore.Qt.AlignCenter | QtCore.Qt.AlignVCenter)
         self.__title_caracteristiques.setFont(A)
         self.__title_caracteristiques.setFixedHeight(80)
-        self.__load_object=QLabel('Objet : '+self.__lien)
+
+        A=QFont('Arial',25)
+        self.__load_object1=QLabel('Objet')
+        self.__load_object1.setFont(A)
+        self.__load_object1.setFixedHeight(40)
+        self.__load_object1.setAlignment(QtCore.Qt.AlignCenter | QtCore.Qt.AlignBottom)
+
+        A=QFont('Arial',16)
+        self.__load_object=QLabel(self.__lien)
+        self.__load_object.setFont(A)
         self.__load_object.setFixedHeight(60)
+        self.__load_object.setAlignment(QtCore.Qt.AlignCenter | QtCore.Qt.AlignVCenter)
 
         self.button_save=QPushButton('Save')
         self.button_save.setFixedHeight(60)
+        self.button_save.setIcon(QtGui.QIcon('png/041-save.png'))
+        self.button_save.setIconSize(QtCore.QSize(30,30))
+
         # self.__img=QLabel()
         # self.__img.setPixmap(QtGui.QPixmap('anchor.png'))
         # self.__img.setScaledContents(True)
         # self.__img.setFixedHeight(300)
         '''Association Layout'''
         self.__layout.addWidget(self.__title,0,0)
+        self.__layout.addWidget(self.__load_object1)
         self.__layout.addWidget(self.__load_object)
         self.__layout.addWidget(self.button_load)
         self.__layout.addWidget(self.button_save)
         self.__layout.addWidget(self.__title_caracteristiques)
         self.__layout.addWidget(self.__caracteristiques)
-        #self.__layout.addWidget(self.__img)
         self.setLayout(self.__layout)
 
 
@@ -85,7 +101,8 @@ class Widget_Gauche(QWidget) :
         self.__caracteristiques.setText ('Surface : '+str(signif(Stot,4))+' m2\nSurface immergé : '+str(signif(Stot_dans_eau,4))+' m2\nNombre de facette : '
                                          +str(len(vecteurs))+'\nNombre de facette immergé : '+str(Nb_facettes_dans_eau)) #Mise en place IHM
 
-
+    def retour_caracteristiques(self):
+        return self.__caracteristiques.text()
 
 def signif(x, digit):
     ''' Permet de retourné un digit avec un nombre de chiffre significatif defini par digit

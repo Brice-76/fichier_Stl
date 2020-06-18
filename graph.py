@@ -21,10 +21,12 @@ class Widget_Graph(QWidget) :
 
         """baisser la présicion"""
 
-        hauteur,nb_rep,liste=outil.Dichotomie(translation,-translation,precision,a,normale,rho,masse,potentiometre)
-        outil.translation(2,a,hauteur)
+        hauteur,nb_rep,liste=outil.Dichotomie(translation,-translation,precision,a,normale,rho,masse,float(potentiometre))
+        self.hauteur=hauteur
+
         x=np.linspace(0,nb_rep,nb_rep)
         axes.plot(x,liste)
+        pyplot.style.use(pyplot.style.available[1])
         pyplot.suptitle('Dichotomie')
         pyplot.xlabel('nombre de répetition')
         pyplot.ylabel('''valeur tirant d'eau''')

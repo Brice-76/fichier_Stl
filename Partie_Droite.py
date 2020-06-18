@@ -21,17 +21,25 @@ class Widget_Droit(QWidget) :
         self.rho=1000
         self.__label_title=QLabel('''Tirant d'Eau''')
         self.__label_title.setAlignment(QtCore.Qt.AlignCenter | QtCore.Qt.AlignVCenter)
-        A=QFont("DIN Condensed", 45)
+        A=QFont("Arial", 31,QFont.Bold)
         self.__label_title.setFixedHeight(100)
-
         self.__label_title.setFont(A)
+
+        A=QFont('Arial',20)
+
         self.layout=QGridLayout()
         self.button_compute=QPushButton('Compute')
-        self.button_compute.sizeHint()
-        self.__label_precision=QLabel('Tolérance')
+        self.button_compute.setFixedHeight(60)
+        self.button_compute.setIcon(QtGui.QIcon('png/025-loupe.png'))
+        self.button_compute.setIconSize(QtCore.QSize(30,30))
+        self.__label_precision=QLabel('Tolérance (m)')
+        self.__label_precision.setFont(A)
         self.__label_precision.setAlignment(QtCore.Qt.AlignCenter | QtCore.Qt.AlignVCenter)
+        self.__label_precision.setFixedHeight(30)
         self.__text_precision=QLineEdit()
         self.__label_poids=QLabel('Masse (kg)')
+        self.__label_poids.setFont(A)
+        self.__label_poids.setFixedHeight(30)
         self.__label_poids.setAlignment(QtCore.Qt.AlignCenter | QtCore.Qt.AlignVCenter)
         self.__text_poids=QLineEdit()
         self.__text_poids.setValidator(self.__restriction)
@@ -42,9 +50,11 @@ class Widget_Droit(QWidget) :
         self.eau_de_mer=QRadioButton('''Eau De Mer''')
         self.eau_de_mer.setChecked(True)
         self.eau_douce=QRadioButton('''Eau Douce''')
+        self.eau_de_mer.setFixedHeight(50)
+        self.eau_douce.setFixedHeight(50)
 
 
-        A=QFont("DIN Condensed", 20)
+        A=QFont("Arial", 25)
         self.__label_LCD=QLabel('''Tirant d'eau (m)''')
         self.__label_LCD.setAlignment(QtCore.Qt.AlignCenter | QtCore.Qt.AlignVCenter)
         self.__label_LCD.setFont(A)

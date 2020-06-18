@@ -11,6 +11,7 @@ from Partie_Gauche import *
 from outil import *
 from graph import *
 import math
+
 import sys
 
 
@@ -28,6 +29,10 @@ class Widget_Matplotlib(QWidget) :
         self.box=QGridLayout()
         self.lien=lien
 
+        #image
+        # self.__image=QLabel()
+        # self.__image.setPixmap(QtGui.QPixmap('png/helm.png'))
+        # self.__image.setWindowOpacity(10)
 
         # partie Gauche
         self.partie_gauche=Widget_Gauche(self.lien)
@@ -43,6 +48,7 @@ class Widget_Matplotlib(QWidget) :
 
         # PLOT 3D
         self.fichier=mesh.Mesh.from_file(self.lien)
+        self.fichierr=mesh.Mesh.from_file(self.lien)
         self.figure= pyplot.figure()
         self.init_widget(self.fichier)
 
@@ -146,19 +152,15 @@ Erreur : la tolérance doit être un nombre''')
             translation=2
             #self.message_box_erreur('La translation est definie à 2')
 
-
-        #print((self.potentiometre.line1.text()),(self.potentiometre.line1.text()),(self.partie_droite.precision),(self.partie_droite.rho),(self.partie_droite.masse))
-        a=Dichotomie(translation,-translation,float(self.partie_droite.precision),self.fichier.vectors,self.fichier.normals,
-                     float(self.partie_droite.rho),float(self.partie_droite.masse),float(self.potentiometre.dial1.value())/10)
-        #print('retour dico',a[0])
-
-        self.partie_droite.LCD.display(abs(a[0]))
-
         # graph
-        self.graph = Widget_Graph(self.fichier,float(self.partie_droite.precision),float(self.partie_droite.rho),float(self.partie_droite.masse),translation,float(self.potentiometre.dial1.value())/10)
+        self.graph = Widget_Graph(self.fichier,float(self.partie_droite.precision),float(self.partie_droite.rho),float(self.partie_droite.masse),translation,(self.potentiometre.dial1.value())/10)
+        self.partie_droite.LCD.display(abs(self.graph.hauteur))
         self.partie_droite.layout.addWidget(self.graph,13,0,2,0)
+        self.potentiometre.dial1.setValue(0)
         self.hide()
         self.show()
+        self.fichier=self.fichierr
+        self.init_widget(self.fichierr)
 
     def message_box_erreur(self,text):
         '''Fenetre Pop-Up affichant un message d'erreur'''
@@ -171,12 +173,19 @@ Erreur : la tolérance doit être un nombre''')
 
     def push_save(self):
         print('save')
+
         Ouverture = QFileDialog.getSaveFileName(self,
                 "Sauvegarde",
                 "Name")
         url=Ouverture[0]+'.txt'
         fichier = open(url, "w")
-        fichier.write('')
+        fichier.write('Compte rendu du test sur : '+self.lien+'\n\n\nCaracteristiques : \n'+self.partie_gauche.retour_caracteristiques()+
+                      '\n\nDéplacement : \n'+'Translation Z : '+str((self.potentiometre.dial1.value())/10)+'\nRotation Y : '+str((self.potentiometre.dial2.value())/10)+
+                      '\nRotation Y : '+str((self.potentiometre.dial3.value())/10)+'''\n\nTirant d'eau: '''+str(self.partie_droite.LCD.value())+'\nMasse : '+str(self.partie_droite.masse)
+                      +'\nPrecision : '+str(self.partie_droite.precision))
+
+
+
 
 
 
@@ -187,3 +196,6 @@ if __name__ == '__main__' :
     window=Widget_Matplotlib('V_HULL_Normals_Outward.STL')
     window.show()
     app.exec_()
+
+#0 0 0.001 1025 2000.0
+#0 0 0.001 1025 2000.0
