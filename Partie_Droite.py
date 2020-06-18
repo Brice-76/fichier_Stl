@@ -75,8 +75,9 @@ class Widget_Droit(QWidget) :
 
     def l1(self):
         ''' lors d'une modif LineEdit1 => enregistrement sous la variable'''
+        if self.__text_precision.text() == '' :
+            return
         self.precision=float(self.__text_precision.text())
-        print(self.precision)
     def l2(self):
         ''' lors d'une modif LineEdit2 => enregistrement sous la variable'''
         if self.text_poids.text() == '' :
