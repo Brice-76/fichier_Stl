@@ -116,13 +116,12 @@ class Widget_Matplotlib(QWidget) :
                 "Ouvrir un fichier",
                 "../Documents",
                 "STL (*.stl);; TIFF (*.tif);; All files (*.*)")
+
+
         print(Ouverture[0])
         self.__lien=str(Ouverture[0])
         window=Widget_Matplotlib(self.__lien)
-        window.exec()
-        self.close()
-        #self.__load_object.setText('Object : '+self.__lien)
-
+        window.exec_()
 
     def push_compute(self):
         '''
@@ -137,7 +136,7 @@ class Widget_Matplotlib(QWidget) :
 
         #verif tolérance
         if float(self.partie_droite.precision) >= 1 or float(self.partie_droite.precision)<=0 :
-            self.message_box_erreur('''Tolérance
+            self.message_box_erreur('''                                         Tolérance\n
 Erreur : la tolérance doit être inferieur à 1 et positive
 Erreur : la tolérance doit être un nombre''')
             return
@@ -145,6 +144,11 @@ Erreur : la tolérance doit être un nombre''')
             self.partie_droite.rho=1025
         else :
             self.partie_droite.rho=1000
+
+        if self.partie_droite.text_poids.text() == '' :
+            self.message_box_erreur('''                                   Masse\n
+Erreur : Entrez une valeur différente de 0''')
+            return
 
         # verification de la translation
         translation=abs(self.potentiometre.dial1.value()/10)
@@ -196,6 +200,3 @@ if __name__ == '__main__' :
     window=Widget_Matplotlib('V_HULL_Normals_Outward.STL')
     window.show()
     app.exec_()
-
-#0 0 0.001 1025 2000.0
-#0 0 0.001 1025 2000.0

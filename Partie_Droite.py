@@ -41,11 +41,11 @@ class Widget_Droit(QWidget) :
         self.__label_poids.setFont(A)
         self.__label_poids.setFixedHeight(30)
         self.__label_poids.setAlignment(QtCore.Qt.AlignCenter | QtCore.Qt.AlignVCenter)
-        self.__text_poids=QLineEdit()
-        self.__text_poids.setValidator(self.__restriction)
+        self.text_poids=QLineEdit()
+        self.text_poids.setValidator(self.__restriction)
 
         self.__text_precision.textChanged.connect(self.l1)
-        self.__text_poids.textChanged.connect(self.l2)
+        self.text_poids.textChanged.connect(self.l2)
 
         self.eau_de_mer=QRadioButton('''Eau De Mer''')
         self.eau_de_mer.setChecked(True)
@@ -65,7 +65,7 @@ class Widget_Droit(QWidget) :
         self.layout.addWidget(self.__label_precision, 2, 0, 1, 0)
         self.layout.addWidget(self.__text_precision, 3, 0, 1, 0)
         self.layout.addWidget(self.__label_poids, 4, 0, 1, 0)
-        self.layout.addWidget(self.__text_poids, 5, 0, 1, 0)
+        self.layout.addWidget(self.text_poids, 5, 0, 1, 0)
         self.layout.addWidget(self.eau_de_mer, 8, 0)
         self.layout.addWidget(self.eau_douce, 8, 1)
         self.layout.addWidget(self.button_compute, 9, 0, 1, 0)
@@ -79,7 +79,9 @@ class Widget_Droit(QWidget) :
         print(self.precision)
     def l2(self):
         ''' lors d'une modif LineEdit2 => enregistrement sous la variable'''
-        self.masse=float(self.__text_poids.text())
+        if self.text_poids.text() == '' :
+            return
+        self.masse=float(self.text_poids.text())
 
 
 if __name__ == '__main__' :
